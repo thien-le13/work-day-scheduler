@@ -16,17 +16,28 @@ $(function () {
       localStorage.setItem("saveText", JSON.stringify(saveText));
     });
   });
-  // TODO: Add code to apply the past, present, or future class to each time
-  // block by comparing the id to the current hour. HINTS: How can the id
-  // attribute of each time-block be used to conditionally add or remove the
-  // past, present, and future classes? How can Day.js be used to get the
-  // current hour in 24-hour time?
-  //
-  // TODO: Add code to get any user input that was saved in localStorage and set
-  // the values of the corresponding textarea elements. HINT: How can the id
-  // attribute of each time-block be used to do this?
-  //
-  // This displays the current day on the page.
+
+  // Checks the current hour to determine the CSS styling.
+  var hourBlocks = $(".time-block");
+  for (var i = 0; i < hourBlocks.length; i++) {
+    var hour = $(hourBlocks[i]).attr("id").replace("hour-", "");
+    if (hour == dayjs().format("HH")) {
+      $(hourBlocks[i]).addClass("present");
+    } else if (parseInt(hour, 10) < parseInt(dayjs().format("HH"), 10)) {
+      $(hourBlocks[i]).addClass("past");
+    } else {
+      $(hourBlocks[i]).addClass("future");
+    }
+  }
+
+  // Set values of the text areas of a local save file.
+  if (saveText.length != 0) {
+    saveButtons.each(function (index) {
+      $(saveButtons[index]).siblings("textarea").text(saveText[index]);
+    });
+  }
+
+  // Displays the current day on the page.
   var currentDay = $("#currentDay");
   currentDay.text(dayjs().format("dddd, MMMM D, YYYY"));
 });
